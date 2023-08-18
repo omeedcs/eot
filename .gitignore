@@ -1,0 +1,6 @@
+downward/
+.DS_Store
+Search\ Based\ Planning/__pycache__/
+Search\ Based\ Planning/.pytest.cache/
+Adversarial\ Search/__pycache__/
+*.pyc
