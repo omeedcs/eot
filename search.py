@@ -32,27 +32,18 @@ class Problem:
 
 class GameStateProblem(Problem):
 
+    """
+    player_idx is 0 or 1, depending on which player will be first to move from this initial state.
+    """
     def __init__(self, initial_board_state, goal_board_state, player_idx):
-        """
-        player_idx is 0 or 1, depending on which player will be first to move from this initial state.
 
-        The form of initial state is:
-        ((game board state tuple), player_idx ) <--- indicates state of board and who's turn it is to move
-        """
         super().__init__(tuple((tuple(initial_board_state.state), player_idx)), set([tuple((tuple(goal_board_state.state), 0)), tuple((tuple(goal_board_state.state), 1))]))
         self.sim = GameSimulator(None)
         self.search_alg_fnc = None
         self.set_search_alg()
 
     def set_search_alg(self, alg=""):
-        """
-        If you decide to implement several search algorithms, and you wish to switch between them,
-        pass a string as a parameter to alg, and then set:
-            self.search_alg_fnc = self.your_method
-        to indicate which algorithm you'd like to run.
-
-        """
-        self.search_alg_fnc = self.our_snazzy_search_algorithm
+        self.search_alg_fnc = self.a_star_algorithm
 
     def get_actions(self, state: tuple):
         """
@@ -91,34 +82,16 @@ class GameStateProblem(Problem):
         offset_idx = p * 6
         return tuple((tuple( s[i] if i != offset_idx + k else v for i in range(len(s))), (p + 1) % 2))
 
-    ## TODO: Implement your search algorithm(s) here as methods of the GameStateProblem.
-    ##       You are free to specify parameters that your method may require.
-    ##       However, you must ensure that your method returns a list of (state, action) pairs, where
-    ##       the first state and action in the list correspond to the initial state and action taken from
-    ##       the initial state, and the last (s,a) pair has s as a goal state, and a=None, and the intermediate
-    ##       (s,a) pairs correspond to the sequence of states and actions taken from the initial to goal state.
-    ## NOTE: The format of state is a tuple: (encoded_state, player_idx), where encoded_state is a tuple of 12 integers
-    ##       (mirroring the contents of BoardState.state), and player_idx is 0 or 1, indicating the player that is
-    ##       moving in this state.
-    ##       The format of action is a tuple: (relative_idx, position), where relative_idx the relative index into encoded_state
-    ##       with respect to player_idx, and position is the encoded position where the piece should move to with this action.
-    ## NOTE: self.get_actions will obtain the current actions available in current game state.
-    ## NOTE: self.execute acts like the transition function.
-    ## NOTE: Remember to set self.search_alg_fnc in set_search_alg above.
-    ## 
-    """ Here is an example:
-    
-    def my_snazzy_search_algorithm(self):
-        ## Some kind of search algorithm
-        ## ...
-        return solution ## Solution is an ordered list of (s,a)
+
     """
+    A* SEARCH
 
     # in this method, we are returning a list of (state, action) pairs.
     # the first state and action in the list correspond to the initial state and action taken from
     # the initial state, and the last (s,a) pair has s as a goal state, and a=None, and the intermediate
     # (s,a) pairs correspond to the sequence of states and actions taken from the initial to goal state.
-    def our_snazzy_search_algorithm(self):
+    """
+    def a_star_algorithm(self):
         # Assign the start and goal states
         start_state = self.initial_state
         goal_state = self.goal_state_set
